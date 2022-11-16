@@ -1,16 +1,17 @@
 package org.nfmp.dev.gui;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.swing.*;
 import java.awt.*;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class TestFrame extends JFrame {
-    private static final Logger LOGGER = Logger.getLogger("com.org.nfmp.TestFrame");
+    private static final Logger LOGGER = LoggerFactory.getLogger(TestFrame.class);
     private static final String DEFAULT_TITLE = "Development Utility";
     private static final String lScript = "scripts/script.sh";
     private static final String lDefaultModules = "nms nms_nodes";
@@ -57,22 +58,22 @@ public class TestFrame extends JFrame {
             int exitStatus = process.waitFor();
 
             String line;
-            LOGGER.info("***** Script execution Starts *****");
+            LOGGER.debug("***** Script execution Starts *****");
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
             while ((line = bufferedReader.readLine()) != null) {
-                LOGGER.info(line);
+                LOGGER.debug(line);
             }
             if (exitStatus != 0) {
                 bufferedReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
                 while ((line = bufferedReader.readLine()) != null) {
-                    LOGGER.log(Level.SEVERE, line);
+                    LOGGER.error(line);
                 }
                 throw new IllegalStateException("Script exited abnormally");
             }
-            LOGGER.info("***** Script executed successfully *****");
+            LOGGER.debug("***** Script executed successfully *****");
 
         } catch (InterruptedException | IOException e) {
-            LOGGER.log(Level.SEVERE,"Error during script execution", e);
+            LOGGER.error("Error during script execution", e);
         }
     }
 
